@@ -44,7 +44,6 @@ def rectex_view(request):
     # hImg,wImg= removed_lines.shape
     # detected_text = pytesseract.image_to_data(removed_lines,lang='script/Devanagari')
     # #print(detected_text)
-
     # bound_result = None
     # for x,b in enumerate(detected_text.splitlines()):
     #     if x!=0:
@@ -56,6 +55,8 @@ def rectex_view(request):
 
     # # 5. Add bounded boxes, confidance code to recgonized text
     # cv2.imwrite('staticroot/test_ocr_images/boundresult.png',bound_result)
+
+    
 
     # 6. Display text and image with recognized text
 
