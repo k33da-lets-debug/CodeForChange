@@ -131,3 +131,9 @@ STATIC_ROOT = Path.joinpath(BASE_DIR, 'staticroot')
 STATICFILES_DIRS = [
     Path.joinpath(BASE_DIR, 'static'),
 ]
+
+#MEDIA_ROOT is for server path to store files in the computer.
+MEDIA_ROOT =  Path.joinpath(BASE_DIR, 'media') 
+
+#MEDIA_URL is the reference URL for browser to access the files over Http.
+MEDIA_URL = '/media/'
