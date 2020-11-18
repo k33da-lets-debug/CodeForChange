@@ -146,8 +146,10 @@ def rectex_view(request):
             #Bounded rectange
             bounded_rectangle_image = get_bounded_rectangles_on_identified_text(removed_verticle_lines_image)
             tempu = 'media/converted/'+filename+'_'+'brres.png'
-            context['brres_url'] = tempu
+            context['conversion_result'] = tempu
             cv2.imwrite(tempu,bounded_rectangle_image)
+
+            context['result_flag'] = True
             
     
             
