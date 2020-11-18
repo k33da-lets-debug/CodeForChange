@@ -1292,7 +1292,7 @@ section {
   border: 0;
   padding: 10px 24px;
   color: #fff;
-  transition: 0.4s;
+  /* transition: 0.4s; */
   border-radius: 4px;
 }
 

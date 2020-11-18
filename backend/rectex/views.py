@@ -126,7 +126,6 @@ def rectex_view(request):
 
             #Extracted data TODO: Improve performance
             ocr_text=str(pytesseract.image_to_string(removed_verticle_lines_image,lang='script/Devanagari'))
-
             #Bounded rectange
             bounded_rectangle_image = get_bounded_rectangles_on_identified_text(removed_verticle_lines_image)
             cv2.imwrite('media/converted/brres.png',bounded_rectangle_image)
@@ -141,6 +140,7 @@ def rectex_view(request):
             context['cv6_url'] = '/media/converted/cv6.png'
             context['brres_url'] = '/media/converted/cv2.png'
             context['conversion_result'] = '/media/converted/brres.png'
+            context['result'] = ocr_text
 
     context['form'] = form
     return render(request,'rectex/rectex_template.html',context=context)
