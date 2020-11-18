@@ -4,73 +4,14 @@ from PIL import Image
 import pytesseract
 import cv2
 import numpy as np
-from .image_transformation_utils import compute_skew,deskew,skeletonize,remove_noise,remove_lines,remove_horizontal_lines,remove_verticle_lines,get_bounded_rectangles_on_identified_text,denoise
-
+from .image_transformation_utils import (compute_skew,deskew,skeletonize,
+                                        remove_noise,remove_lines,remove_horizontal_lines,
+                                        remove_verticle_lines,get_bounded_rectangles_on_identified_text,
+                                        denoise,)
 from .forms import OCRForm
 from .models import OCR
 
-# Create your views here.
-
-# def rectex_view(request):
-
-#     #TODO:
-#     # 1. Get image
-#     raw_image = cv2.imread('staticroot/test_ocr_images/Test.jpg')
-#     # 2. Convert it to rgb
-#     rgb_image = cv2.cvtColor(raw_image,cv2.COLOR_BGR2RGB)
-#     # Convert it to greyscale
-#     grayscale_image = cv2.cvtColor(rgb_image,cv2.COLOR_RGB2GRAY)  
-#     # 2.1 binarization: converting to black and white pixels, and removing watermark
-#     # define a threshold, 128 is the middle of black and white in grey scale
-#     # threshold the image
-#     thresh = 128
-#     img_binary = cv2.threshold(grayscale_image, thresh, 255, cv2.THRESH_BINARY)[1] 
-
-#     #Text thickning
-#     kernel = np.ones((1,1), np.uint8) 
-#     text_thickning = cv2.erode(img_binary,kernel,iterations = 2)
-#     cv2.imwrite('staticroot/test_ocr_images/threshresult.png',text_thickning)
-
-#     #Removing H/V lines
-#     removed_lines = remove_lines(text_thickning)
-#     cv2.imwrite('staticroot/test_ocr_images/removed_lines.png',removed_lines)
-
-#     # Skew correction: Setting orientation (Hough transformation)
-#     # computed_skew = compute_skew(adaptive_threshold)
-#     # deskewed = deskew(adaptive_threshold,computed_skew)
-#     # cv2.imwrite('staticroot/test_ocr_images/dskewedresult.png',deskewed)
-
-#     # Thinning and Skeletonization: 
-#     # skeletonized = skeletonize(background_noise_reduced)
-#     # cv2.imwrite('staticroot/test_ocr_images/skeletonizationresult.png',skeletonized)
-
-#     # Text recognization using tessaract and Pytessract
-#     # hImg,wImg= removed_lines.shape
-#     # detected_text = pytesseract.image_to_data(removed_lines,lang='script/Devanagari')
-#     # #print(detected_text)
-#     # bound_result = None
-#     # for x,b in enumerate(detected_text.splitlines()):
-#     #     if x!=0:
-#     #         b = b.split() 
-#     #         if len(b)==12:
-#     #             a,b,w,h = int(b[6]),int(b[7]) ,int(b[8]) ,int(b[9]) 
-#     #             bound_result = cv2.rectangle(removed_lines,(a,b),(w+a,h+b),(0,0,255),3)
-#     #             # cv2.puttext(img_erosion,b[0],(a,hImg-b+25),cv2.FONT_HERSHEY_COMPLEX,1,(50,50,255),2)
-
-#     # # 5. Add bounded boxes, confidance code to recgonized text
-#     # cv2.imwrite('staticroot/test_ocr_images/boundresult.png',bound_result)
-
-    
-
-#     # 6. Display text and image with recognized text
-
-#     # 7. Do some NLP magic
-
-
-#     return HttpResponse('<h1>'+str(pytesseract.image_to_string(removed_lines,lang='script/Devanagari'))+'</h1>')
-
-
-# Dummy code
+# Created by Ninad Parab(k33da_the_bug)
 def rectex_view(request):
 
     context = {}
@@ -81,12 +22,12 @@ def rectex_view(request):
         form = OCRForm(request.POST,request.FILES)
         if form.is_valid():
             d=form.save()
-            #TODO: Optimise this pipeline
+            
+            #Image preprocessing pipeline
             data = OCR.objects.get(id=d.id)
             url = data.to_be_converted_image.url[1:]
             file_meta =url.split('/')[-1]
             filename = file_meta.split('.')[0]
-
 
             raw_image = Image.open(url)
             opencv_image = cv2.cvtColor(np.array(raw_image), cv2.COLOR_RGB2BGR)
@@ -128,7 +69,7 @@ def rectex_view(request):
             context['cv6_url'] = tempu
             cv2.imwrite(tempu,removed_verticle_lines_image)
 
-            #Conversion N
+            #Conversion N (Not used)
             # There are some more conversions 
 
             # skeletonize_image = skeletonize(removed_horizontal_lines_image)
@@ -137,13 +78,13 @@ def rectex_view(request):
             # denoise_image = denoise(removed_verticle_lines_image)
             # cv2.imwrite('media/converted/cvN.png',denoise_image)
 
-            #End of dummy conversions
+            # End of dummy conversions
 
-            #Extracted data TODO: Improve performance
+            # Extracted data TODO: Improve performance by eliminating images
             ocr_text=str(pytesseract.image_to_string(removed_verticle_lines_image,lang='script/Devanagari',config='--oem 3 --psm 6'))
             context['result'] = ocr_text
 
-            #Bounded rectange
+            #Bounded rectange result
             bounded_rectangle_image = get_bounded_rectangles_on_identified_text(removed_verticle_lines_image)
             tempu = 'media/converted/'+filename+'_'+'brres.png'
             context['conversion_result'] = tempu
@@ -152,8 +93,6 @@ def rectex_view(request):
             context['result_flag'] = True
             
     
-            
-
     context['form'] = form
     return render(request,'rectex/rectex_template.html',context=context)
 

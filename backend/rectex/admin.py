@@ -1,4 +1,4 @@
 from django.contrib import admin
 from .models import OCR
-# Register your models here.
+# Temperory registration of admin
 admin.site.register(OCR)

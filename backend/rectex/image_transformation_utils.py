@@ -29,12 +29,9 @@ def compute_skew(img):
     
     return angle* 180.0 / np.pi
 
-
 def deskew(img,angle):
-    
     # load in grayscale:
     # img = cv2.imread(file_name,0)
-    
     #invert the colors of our image:
     cv2.bitwise_not(img, img)
     
@@ -54,7 +51,6 @@ def deskew(img,angle):
         sizex= sizey
         sizey= temp
     return cv2.getRectSubPix(rotated, (sizey,sizex), center)
-
 
 
 def skeletonize(img):
@@ -160,8 +156,6 @@ def get_bounded_rectangles_on_identified_text(img):
                 # cv2.puttext(img_erosion,b[0],(a,hImg-b+25),cv2.FONT_HERSHEY_COMPLEX,1,(50,50,255),2)
 
     return bound_result
-
-
 
 
 def denoise(img):
