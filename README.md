@@ -60,7 +60,7 @@ First install Tessaract engine on your machine. For detailed guide you can follo
  
  3. Clone this repository in that folder by typing
  
-    `https://github.com/k33da-lets-debug/ACM-Mumbai_hackthon.git`
+    `https://github.com/k33da-lets-debug/CodeForChange.git`
  
  4. Install virtual environment:
     `pip install virtualenv`
