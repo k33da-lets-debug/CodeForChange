@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import cv2
+import pytesseract
 
 def compute_skew(img):
     
@@ -115,4 +116,59 @@ def remove_lines(img):
 
     return result
 
+
+def remove_horizontal_lines(img):
+    result = img.copy()
+    #gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+    # Remove horizontal lines
+    horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (150,1))
+    remove_horizontal = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, horizontal_kernel, iterations=2)
+    cnts = cv2.findContours(remove_horizontal, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    for c in cnts:
+        cv2.drawContours(result, [c], -1, (255,255,255), 5)
+    return result
+
+def remove_verticle_lines(img):
+    result = img.copy()
+    #gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+    # Remove vertical lines
+    vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1,20))
+    remove_vertical = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, vertical_kernel, iterations=2)
+    cnts = cv2.findContours(remove_vertical, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    for c in cnts:
+        cv2.drawContours(result, [c], -1, (255,255,255), 5)
+
+    return result
+
+
+def get_bounded_rectangles_on_identified_text(img):
+    #Text recognization using tessaract and Pytessract
+    hImg,wImg= img.shape
+    detected_text = pytesseract.image_to_data(img,lang='script/Devanagari')
+    #print(detected_text)
+    bound_result = None
+    for x,b in enumerate(detected_text.splitlines()):
+        if x!=0:
+            b = b.split() 
+            if len(b)==12:
+                a,b,w,h = int(b[6]),int(b[7]) ,int(b[8]) ,int(b[9]) 
+                bound_result = cv2.rectangle(img,(a,b),(w+a,h+b),(0,0,255),3)
+                # cv2.puttext(img_erosion,b[0],(a,hImg-b+25),cv2.FONT_HERSHEY_COMPLEX,1,(50,50,255),2)
+
+    return bound_result
+
+
+
+
+def denoise(img):
+# load color image
+    # smooth the image with alternative closing and opening
+    # with an enlarging kernel
+    res = cv2.fastNlMeansDenoising(img,h=15)
+
+    return res
 

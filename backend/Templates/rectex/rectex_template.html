@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -57,7 +58,7 @@
         </ul> -->
       </nav><!-- .nav-menu -->
 
-      <a href="#about" class="get-started-btn scrollto">Get Started</a>
+      <a href="#how_it_works" class="get-started-btn scrollto">Get Started</a>
 
     </div>
   </header><!-- End Header -->
@@ -75,8 +76,9 @@
               <div class="carousel-container">
                 <div class="container">
                   <h2 class="animate__animated animate__fadeInDown">Welcome to <span>Rectex</span></h2>
-                  <p class="animate__animated animate__fadeInUp">Simple ML webapp for detecting 7-12 utara in Devnagri language</p>
-                  <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Scroll down</a>
+                  <p class="animate__animated animate__fadeInUp">Rectex is simple tool which can be used to extract information from Devnagri text. 
+                  It is basically OCR tool based on Google's Tessaract engine. It is created for VESIT's INVINCIA-Code for change Hackthon</p>
+                  <a href="#how_it_works" class="btn-get-started animate__animated animate__fadeInUp scrollto">Scroll down</a>
                 </div>
               </div>
             </div>
@@ -118,7 +120,7 @@
         </div>
       </section><!-- End Hero -->
     
-      <main id="main">
+      <main id="how_it_works">
     
         <!-- ======= Featured Services Section ======= -->
         <section id="featured-services" class="featured-services section-bg">
@@ -129,21 +131,21 @@
                 <div class="icon-box">
                   <div class="icon"><i class="icofont-cloud-upload"></i></div>
                   <h4 class="title"><a href="">Upload your image</a></h4>
-                  <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
+                  <p class="description">You can upload your 7-12 Utara in image/PDF format. In later versions it can be upgraded to more formats too.</p>
                 </div>
               </div>
               <div class="col-lg-4 col-md-6">
                 <div class="icon-box">
                   <div class="icon"><i class="icofont-mathematical-alt-2"></i></div>
                   <h4 class="title"><a href="">See results and how the data is extracted</a></h4>
-                  <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
+                  <p class="description">This section will explain how we extracted data from your image/PDF. You will be able to see image processing.</p>
                 </div>
               </div>
               <div class="col-lg-4 col-md-6">
                 <div class="icon-box">
                   <div class="icon"><i class="icofont-tasks-alt"></i></div>
                   <h4 class="title"><a href="">Get extracted data</a></h4>
-                  <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur trade stravi</p>
+                  <p class="description">Get extracted text from your image/PDF</p>
                 </div>
               </div>
             </div>
@@ -159,28 +161,21 @@
               
                       <div class="section-title">
                         <h2>Convert your image/pdf over here</h2>
-                        <p>Rectx is simple tool which can be used to extract data from images/pdf. It uses Google's tessaract engine at its core. Also it uses NLP methods like Named entitiy recognization etc. I made this tool for hackthon purpose and the code is available at github</p>
+                        <p>Rectx is simple tool which can be used to extract data from images/pdf. It uses Google's tessaract engine at its core. I made this tool for hackthon purpose and the code is available at github. </p>
                       </div>
               
                       <div class="row">
-              
-
-              
+            
                         <div class="col-lg-12 mt-5 mt-lg-0 d-flex align-items-stretch">
-                          <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-
-                            <!-- <div class="form-group">
-                              <label for="name">Image preview</label>
-                              <textarea class="form-control" name="message" rows="10" data-rule="required" data-msg="Please write something for us"></textarea>
-                              <div class="validate"></div>
-                            </div>
-                            <div class="mb-3">
-                              <div class="loading">Loading</div>
-                              <div class="error-message"></div>
-                              <div class="sent-message">Your message has been sent. Thank you!</div>
-                            </div> -->
-                            <div class="text-center"><button type="submit">Upload image</button></div>
+                            
+                          <form  method="POST" class="-php-email-form"  enctype="multipart/form-data">
+                            
+                            <div class="text-center">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                            <button type="submit" type="button"  >Convert</button></div>
                           </form>
+
                         </div>
               
                       </div>
@@ -191,50 +186,59 @@
         <!-- ======= Image preprocessing Section ======= -->
         <section id="why-us" class="why-us">
           <div class="container">
+
+            <div class="section-title">
+              <h2>We got your image, see here how it got processed</h2>
+              <p>OCR tools are used for text detection. We are using OpenCV for image preprocessing and 
+                Google's tessaract engine to extract data from it. Here are some interesting image processing results which will explain how this works in lay mans terms.
+              There are so many filters which can be used to extract data more accurately.</p>
+            </div>
     
             <div class="row no-gutters">
     
               <div class="col-lg-6 col-md-6 content-item">
                 <span>01</span>
                 <h4>Conversion 1</h4>
-                <img style="max-width: 100%;" src="{% static 'test_ocr_images/Test.jpg' %}" />
-                <p>Ulamco laboris nisi ut aliquip ex ea commodo consequat. Et consectetur ducimus vero placeat</p>
+                <img style="max-width: 100%;" src="{{cv1_url}}" />
+                <p>For start you have uploaded your file, then to process it we converted it into OpenCV's readable format. By default OpenCv uses BGR format so we converted image into RGB format.</p>
               </div>
     
               <div class="col-lg-6 col-md-6 content-item">
                 <span>02</span>
                 <h4>Conversion 2</h4>
-                <img style="max-width: 100%;" src="{% static 'test_ocr_images/Test.jpg' %}" />
-                <p>Dolorem est fugiat occaecati voluptate velit esse. Dicta veritatis dolor quod et vel dire leno para dest</p>
+                <img style="max-width: 100%;" src="{{cv2_url}}" />
+                <p>As we have got RGB image that means we have more colour pixel data. It will be so much memory intensive to perform operations for just Text extraction. So we converted it to Grayscale image.</p>
               </div>
     
               <div class="col-lg-6 col-md-6 content-item">
                 <span>03</span>
                 <h4> Conversion 3</h4>
-                <img style="max-width: 100%;" src="{% static 'test_ocr_images/Test.jpg' %}" />
-                <p>Molestiae officiis omnis illo asperiores. Aut doloribus vitae sunt debitis quo vel nam quis</p>
+                <img style="max-width: 100%;" src="{{cv3_url}}" />
+                <p>After Converting to Grayscale still some more filteration process is required. If you can see we have some watermarks and some lousy noise in document. To remove it we simpelly removed Alpha channels and converted into a Binary image i.e Black and White</p>
               </div>
     
               <div class="col-lg-6 col-md-6 content-item">
                 <span>04</span>
                 <h4>Conversion 4</h4>
-                <img style="max-width: 100%;" src="{% static 'test_ocr_images/Test.jpg' %}" />
-                <p>Inventore quo sint a sint rerum. Distinctio blanditiis deserunt quod soluta quod nam mider lando casa</p>
+                <img style="max-width: 100%;" src="{{cv4_url}}" />
+                <p>Sometimes documents loose/gain some unnecessary thickness/thinnes. If image is thick, we can erode it and make it little thin. If image is thick we can dilate it and make it thin.</p>
               </div>
     
               <div class="col-lg-6 col-md-6 content-item">
                 <span>05</span>
                 <h4>Conversion 5</h4>
-                <img style="max-width: 100%;" src="{% static 'test_ocr_images/Test.jpg' %}" />
-                <p>Vitae dolorem in deleniti ipsum omnis tempore voluptatem. Qui possimus est repellendus est quibusdam</p>
+                <img style="max-width: 100%;" src="{{cv5_url}}" />
+                <p>Sometimes document may contain certain patterns of noise like lines, circle, particles. This filter is designed to remove horizontal lines from our dataset.</p>
               </div>
     
               <div class="col-lg-6 col-md-6 content-item">
                 <span>06</span>
                 <h4>Conversion 6</h4>
-                <img style="max-width: 100%;" src="{% static 'test_ocr_images/Test.jpg' %}" />
-                <p>Quis eum numquam veniam ea voluptatibus voluptas. Excepturi aut nostrum repudiandae voluptatibus corporis sequi</p>
+                <img style="max-width: 100%;" src="{{cv6_url}}" />
+                <p>As previous filter removes horizontal lines, this one removes verticle lines. However it should be noted that it won't work as accurate for some results. Sometimes its good to add more filterations for removing tricky noise.</p>
               </div>
+
+              
     
             </div>
     
@@ -247,7 +251,16 @@
     
         <div class="section-title">
               <h2>Recognised Text</h2>
-              <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+              <p>After doing some image preprocessing here kicks in our actual OCR engine. 
+                Google's Tessaract project is mainely focused on creating best OCR solutions in no time. 
+                It is actually written in C++ but it is made availabe for other languages too. 
+                As currently we have built this in python so we are using pytessaract module which is wrapper for Tessaract engine.
+
+                Below is the result where we can see what exact data is detected using tessaract engine. 
+                It is not the best one result but it can be further improved using some more image preprocessing.
+              </p>
+
+                
             </div>
     
             <!-- <div class="owl-carousel clients-carousel">
@@ -261,8 +274,7 @@
               <img src="assets/img/clients/client-8.png" alt=""> -->
               <div class="row">
                     <div class="col-lg-12 col-md-6 content-item">
-                    <img style="max-width: 100%;" src="{% static 'test_ocr_images/Test.jpg' %}" />
-                    <p>Ulamco laboris nisi ut aliquip ex ea commodo consequat. Et consectetur ducimus vero placeat</p>
+                    <img style="max-width: 100%;" src="{{conversion_result}}" />
                     </div>
                 </div>
             </div>
@@ -275,16 +287,16 @@
                     <div class="container">
               
                       <div class="section-title">
-                        <h2>Editable result from OCR</h2>
-                        <p>Rectx is simple tool which can be used to extract data from images/pdf. It uses Google's tessaract engine at its core. Also it uses NLP methods like Named entitiy recognization etc. I made this tool for hackthon purpose and the code is available at github</p>
+                        <h2>Result</h2>
+                        <p>Here is the textual data which got extracted from your image.</p>
                       </div>
               
                       <div class="row">
               
                         <div class="col-lg-12 mt-5 mt-lg-0 d-flex align-items-stretch">
-                          <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                          <!-- <form  method="post" role="form" class="php-email-form"> -->
         
-                           <div class="form-group">
+                           <!-- <div class="form-group">
                               <label for="name">Image preview</label>
                               <textarea class="form-control" name="message" rows="10" data-rule="required" data-msg="Please write something for us"></textarea>
                               <div class="validate"></div>
@@ -293,9 +305,9 @@
                               <div class="loading">Loading</div>
                               <div class="error-message"></div>
                               <div class="sent-message">Your message has been sent. Thank you!</div>
-                            </div> 
+                            </div>  -->
                             <!-- <div class="text-center"><button type="submit">Upload image</button></div> -->
-                          </form>
+                          <!-- </form> -->
                         </div>
               
                       </div>
@@ -645,16 +657,13 @@
       <footer id="footer">
         <div class="container">
           <h3>Rectex</h3>
-          <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p>
+          <p>Simple Open source tool for extracting data from 7-12 cha utara in devnagri text.</p>
           <div class="social-links">
             <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
             <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
             <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
             <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
             <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-          </div>
-          <div class="copyright">
-            &copy; Copyright <strong><span>Green</span></strong>. All Rights Reserved
           </div>
           <div class="credits">
             <!-- All the links in the footer should remain intact. -->

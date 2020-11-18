@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from PIL import Image
 import pytesseract
 import cv2
 import numpy as np
-from .image_transformation_utils import compute_skew,deskew,skeletonize,remove_noise,remove_lines
+from .image_transformation_utils import compute_skew,deskew,skeletonize,remove_noise,remove_lines,remove_horizontal_lines,remove_verticle_lines,get_bounded_rectangles_on_identified_text,denoise
+
+from .forms import OCRForm
+from .models import OCR
+
 # Create your views here.
 
 # def rectex_view(request):
@@ -68,5 +72,76 @@ from .image_transformation_utils import compute_skew,deskew,skeletonize,remove_n
 
 # Dummy code
 def rectex_view(request):
-    context={}
+
+    context = {}
+    form = OCRForm() 
+
+    form = OCRForm()
+    if request.method == 'POST':
+        form = OCRForm(request.POST,request.FILES)
+        if form.is_valid():
+            d=form.save()
+            #TODO: Optimise this pipeline
+            data = OCR.objects.get(id=d.id)
+            url = data.to_be_converted_image.url[1:]
+
+            raw_image = Image.open(url)
+            opencv_image = cv2.cvtColor(np.array(raw_image), cv2.COLOR_RGB2BGR)
+            
+            #conversion 1
+            rgb_image = cv2.cvtColor(opencv_image,cv2.COLOR_BGR2RGB)
+            cv2.imwrite('media/converted/cv1.png',rgb_image)
+            
+            #Conversion 2
+            grayscale_image = cv2.cvtColor(rgb_image,cv2.COLOR_RGB2GRAY)
+            cv2.imwrite('media/converted/cv2.png',grayscale_image)
+            
+            #Conversion 3
+            binary_image = cv2.threshold(grayscale_image, 128, 255, cv2.THRESH_BINARY)[1] 
+            cv2.imwrite('media/converted/cv3.png',binary_image)
+
+            #Conversion 4
+            kernel = np.ones((1,1), np.uint8) 
+            text_thickned_image = cv2.erode(binary_image,kernel,iterations = 2)
+            cv2.imwrite('media/converted/cv4.png',text_thickned_image)
+
+            #Conversion 5
+            removed_horizontal_lines_image = remove_horizontal_lines(text_thickned_image)
+            cv2.imwrite('media/converted/cv5.png',removed_horizontal_lines_image)
+
+            #Conversion 6
+            removed_verticle_lines_image = remove_verticle_lines(removed_horizontal_lines_image)
+            cv2.imwrite('media/converted/cv6.png',removed_verticle_lines_image)
+
+            #Conversion N
+            # There are some more conversions 
+
+            # skeletonize_image = skeletonize(removed_horizontal_lines_image)
+            # cv2.imwrite('media/converted/cv7.png',skeletonize_image)
+
+            denoise_image = denoise(removed_verticle_lines_image)
+            cv2.imwrite('media/converted/cvN.png',denoise_image)
+
+            #End of dummy conversions
+
+            #Extracted data TODO: Improve performance
+            ocr_text=str(pytesseract.image_to_string(removed_verticle_lines_image,lang='script/Devanagari'))
+
+            #Bounded rectange
+            bounded_rectangle_image = get_bounded_rectangles_on_identified_text(removed_verticle_lines_image)
+            cv2.imwrite('media/converted/brres.png',bounded_rectangle_image)
+            
+    
+            #Data formation : TODO: Improve code
+            context['cv1_url'] = '/media/converted/cv1.png'
+            context['cv2_url'] = '/media/converted/cv2.png'
+            context['cv3_url'] = '/media/converted/cv3.png'
+            context['cv4_url'] = '/media/converted/cv4.png'
+            context['cv5_url'] = '/media/converted/cv5.png'
+            context['cv6_url'] = '/media/converted/cv6.png'
+            context['brres_url'] = '/media/converted/cv2.png'
+            context['conversion_result'] = '/media/converted/brres.png'
+
+    context['form'] = form
     return render(request,'rectex/rectex_template.html',context=context)
+

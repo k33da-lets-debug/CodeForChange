@@ -19,5 +19,5 @@ from .views import rectex_view
 
 
 urlpatterns = [
-    path('', rectex_view ),
+    path('', rectex_view , name='rectex_view'),
 ] 
