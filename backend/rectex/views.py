@@ -10,6 +10,7 @@ from .image_transformation_utils import (compute_skew,deskew,skeletonize,
                                         denoise,)
 from .forms import OCRForm
 from .models import OCR
+from .export_utils import extractCoordsData,convertToExel
 
 # Created by Ninad Parab(k33da_the_bug)
 def rectex_view(request):
@@ -91,6 +92,14 @@ def rectex_view(request):
             cv2.imwrite(tempu,bounded_rectangle_image)
 
             context['result_flag'] = True
+
+            # Exel functionality
+            extracted_coords = extractCoordsData(removed_verticle_lines_image)
+            tempu = 'media/exel/'+filename+'_output.xlsx'
+            exportxl_data = convertToExel(extracted_coords)
+            exportxl_data.to_excel(tempu,sheet_name='Sheet_name_1')
+            
+            context['exel_sheet'] = tempu
             
     
     context['form'] = form
