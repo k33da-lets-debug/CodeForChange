@@ -94,12 +94,12 @@ def rectex_view(request):
             context['result_flag'] = True
 
             # Exel functionality
-            extracted_coords = extractCoordsData(removed_verticle_lines_image)
-            tempu = 'media/exel/'+filename+'_output.xlsx'
-            exportxl_data = convertToExel(extracted_coords)
-            exportxl_data.to_excel(tempu,sheet_name='Sheet_name_1')
+            # extracted_coords = extractCoordsData(removed_verticle_lines_image)
+            # tempu = 'media/exel/'+filename+'_output.xlsx'
+            # exportxl_data = convertToExel(extracted_coords)
+            # exportxl_data.to_excel(tempu,sheet_name='Sheet_name_1')
             
-            context['exel_sheet'] = tempu
+            # context['exel_sheet'] = tempu
             
     
     context['form'] = form
