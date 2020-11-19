@@ -5,7 +5,7 @@ The problem statement is to develop a tool, application or script
 that can process the required input document in the form of PDF
 or Image file and extract readable text from it.
 The idea behind this problem statement is to extract data from
-image/pdf using google’s open source tessaract engine and some image preprocessing magic. 
+image using google’s open source tessaract engine and some image preprocessing magic. 
 So this project focuses on Web app.
 
 Following technology stack is used to create this simple yet useful tool. 
@@ -20,7 +20,7 @@ Following technology stack is used to create this simple yet useful tool.
 9. [Pillow](https://pypi.org/project/Pillow/)
 
 # How to use this tool.
-This tool is pretty simple to use
+This tool is pretty simple to use. Just upload image and get the results in docx or exel format.
 
 ## Step 1: Read the instructions(obviously :P)
 
@@ -48,7 +48,6 @@ This tool is pretty simple to use
 ![Screenshot](Screenshots/7.PNG)
 ![Screenshot](Screenshots/8.PNG)
 ![Screenshot](Screenshots/9.PNG)
-
 
 
 # Running this project on local machine
