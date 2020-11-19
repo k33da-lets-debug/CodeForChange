@@ -85,7 +85,16 @@ def rectex_view(request):
             ocr_text=str(pytesseract.image_to_string(removed_verticle_lines_image,lang='script/Devanagari',config='--oem 3 --psm 6'))
             context['result'] = ocr_text
 
+            # Exel functionality
+            extracted_coords = extractCoordsData(removed_verticle_lines_image)
+            tempu = 'media/exel/'+filename+'_output.xlsx'
+            exportxl_data = convertToExel(extracted_coords)
+            exportxl_data.to_excel(tempu,sheet_name='Sheet_name_1',)
+            
+            context['exel_sheet'] = tempu
+
             #Bounded rectange result
+
             bounded_rectangle_image = get_bounded_rectangles_on_identified_text(removed_verticle_lines_image)
             tempu = 'media/converted/'+filename+'_'+'brres.png'
             context['conversion_result'] = tempu
@@ -93,13 +102,7 @@ def rectex_view(request):
 
             context['result_flag'] = True
 
-            # Exel functionality
-            # extracted_coords = extractCoordsData(removed_verticle_lines_image)
-            # tempu = 'media/exel/'+filename+'_output.xlsx'
-            # exportxl_data = convertToExel(extracted_coords)
-            # exportxl_data.to_excel(tempu,sheet_name='Sheet_name_1')
-            
-            # context['exel_sheet'] = tempu
+
             
     
     context['form'] = form

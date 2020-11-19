@@ -10,7 +10,7 @@ def extractCoordsData(img):
     detected_text_df = pytesseract.image_to_data(img,lang='script/Devanagari',output_type=pytesseract.Output.DATAFRAME,config='--oem 3 --psm 6')
 
     detected_text_df = detected_text_df[['text','left','top','width','height']]
-    detected_text_df = detected_text_df.dropna()
+    # detected_text_df = detected_text_df.dropna()
     
     d = {}
     d['data'] = detected_text_df
@@ -43,20 +43,16 @@ def convertToExel(data):
     yc = pd.Series(y_cord,name='y_cord')
     tc = pd.Series(e_text,name='e_text')
 
-
-    exel_meta = pd.DataFrame('', index=range(height), columns=range(width))
+    exel_meta = pd.DataFrame('', index=range(height*2), columns=range(width*2))
     
     for i,t in enumerate(tc):
+        t = str(t).replace('nan',' ')
         if exel_meta[xc[i]][yc[i]]=='':
             exel_meta[xc[i]][yc[i]] = t
+        elif exel_meta[xc[i]][yc[i]]!='':
+            exel_meta[xc[i]][yc[i]] = str(exel_meta[xc[i]][yc[i]]) + t
 
+    
     return exel_meta  
-
-
-
-
-
-
-
 
 
