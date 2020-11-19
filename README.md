@@ -42,9 +42,13 @@ This tool is pretty simple to use
 
 ![Screenshot](Screenshots/5.PNG)
 
-## Step 6: Download converted result in docx format.
+## Step 6: Download converted result in docx/xl format.
 
 ![Screenshot](Screenshots/6.PNG)
+![Screenshot](Screenshots/7.PNG)
+![Screenshot](Screenshots/8.PNG)
+![Screenshot](Screenshots/9.PNG)
+
 
 
 # Running this project on local machine
